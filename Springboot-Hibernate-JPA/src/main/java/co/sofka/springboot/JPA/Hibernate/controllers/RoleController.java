@@ -105,5 +105,70 @@ public class RoleController {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    /**
+     * Método para actualizar un role mediante su id
+     * 
+     * @UsageMethod localhost:8080/api/roles/{id} with PUT
+     * @param id      id del role del cuál desea actualizar su información
+     * @param project datos para modificar el role, toma los datos del POST
+     *                requestBody
+     * @return HTTP Response OK en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin encontrar el role, y EXPECTATION_FAILED en
+     *         caso de error.
+     * @author Mathías Collazo
+     **/
+    @PutMapping("/roles/{id}")
+    public ResponseEntity<Role> updateRoleById(@PathVariable("id") Long id,
+            @RequestBody Role role) {
+        Optional<Role> roleData = repoRoles.findById(id);
+        try {
+            if (roleData.isPresent()) {
+                Role _role = roleData.get();
+                if (role.getName() != null)
+                    _role.setName(role.getName());
+                return new ResponseEntity<>(repoRoles.save(_role), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar todos los roles.
+     * 
+     * @UsageMethod localhost:8080/api/roles with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/roles")
+    public ResponseEntity<HttpStatus> deleteAllRoles() {
+        try {
+            repoRoles.deleteAll();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar un role por su id.
+     * 
+     * @UsageMethod localhost:8080/api/roles/{id} with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/roles/{id}")
+    public ResponseEntity<String> deleteRoleById(@PathVariable("id") Long id) {
+        try {
+            repoRoles.deleteById(id);
+            return new ResponseEntity<>("Role deleted succesfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
     
 }
