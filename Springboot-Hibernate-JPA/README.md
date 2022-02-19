@@ -1,30 +1,14 @@
-# springboot-jpa-hibernate
+# Springboot with Hibernate and JPA
 
-Esto es una aplicación de ejemplo que provee una API REST de empleados, proyectos y roles
+|Metodo HTTP|GET|POST|DELETE|PUT|
+|-----------|---|----|------|---|
+|/employees|Listar los empleados|Crear nuevo empleado|Borrar todos los empleados|Error|
+|/employees/{token}|Error|Error|Elimina el empleado con id {token}|Actualiza el empleado con id {token}|
+|/employees?{param}={token}|Listar empleado con {param} {token}|Error|Error|Error|
+|/role|Listar los role|Crear nuevo role|Borrar todos los role|Error|
+|/role/{token}|Error|Error|Elimina el role con id {token}|Actualiza el role con id {token}|
+|/role?{param}={token}|Listar role con {param} {token}|Error|Error|Error|
+|/projects|Listar los proyectos|Crear nuevo proyectos|Borrar todos los proyectos|Error|
+|/projects/{token}|Error|Error|Elimina el proyectos con id {token}|Actualiza el proyectos con id {token}|
+|/projects?{param}={token}|Listar proyectos con {param} {token}|Error|Error|Error|
 
-La API es un proyecto creado en Java utilizando Springboot como framework + JPA + Hibernate
-
-## Ejecutar la app
-
-    mvnw.cmd spring-boot:run
-
-# API REST
-
-La API REST de la aplicación se explica a continuación
-
-
-| METODO HTTP               | POST                  | GET                                   | PUT                                     | DELETE                        |
-| ------------------------- | --------------------- | ------------------------------------- | --------------------------------------- | ----------------------------- |
-| CRUD OP                   | CREATE                | READ                                  | UPDATE                                  | DELETE                        |
-| /employees                | Crear nuevo empleado  | Listar empleados                      | Error                                   | Eliminar todos los empleados  |
-| /employees/1              | Error                 | Mostrar empleado                      | Modificar empleado. Si no existe error  | Eliminar empleado             |
-| /employees?employeeid=a32 | Error                 | Mostrar empleado por su identificador | Error                                   | Error                         |
-| /employees?lastName=abc   | Error                 | Listar empleados por su apellido      | Error                                   | Error                         |
-| .                         |                       |                                       |                                         |                               |
-| /projects                 | Crear nuevo proyecto  | Listar proyectos                      | Error                                   | Eliminar todos los proyectos  |
-| /projects/1               | Error                 | Mostrar proyecto                      | Modificar proyecto. Si no existe error  | Eliminar proyecto             |
-| /projects?name=abc        | Error                 | Mostrar proyecto por su nombre        | Error                                   | Error                         |
-| .                         |                       |                                       |                                         |                               |
-| /roles                    | Crear nuevo rol       | Listar roles                          | Error                                   | Eliminar todos los roles      |
-| /roles/1                  | Error                 | Mostrar rol                           | Modificar rol. Si no existe error       | Eliminar rol                  |
-| /roles?name=abc           | Error                 | Mostrar rol por su nombre             | Error                                   | Error                         |

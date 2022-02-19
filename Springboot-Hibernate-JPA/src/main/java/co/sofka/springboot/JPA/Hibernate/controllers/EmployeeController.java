@@ -73,7 +73,7 @@ public class EmployeeController {
      * @author Mathías Collazo
      **/
     @GetMapping(value = "/employees", params = "id")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
+    public ResponseEntity<Employee> getEmployeeById(@RequestParam(value = "id") Long id) {
         try {
             Optional<Employee> employee = repoEmployee.findById(id);
             if (employee.isPresent()) {
