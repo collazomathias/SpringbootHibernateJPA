@@ -2,6 +2,7 @@ package co.sofka.springboot.JPA.Hibernate.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,100 @@ public class EmployeeController {
             repoEmployee.findAll().forEach(employees::add);
             if (!employees.isEmpty()) {
                 return new ResponseEntity<>(employees, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un empleado mediante su id
+     * 
+     * @UsageMethod localhost:8080/api/employees?id={id} with GET
+     * @param id id del empleado del cuál desea obtener su información
+     * @return HTTP Response OK con el empleado en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin empleado, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/employees", params = "id")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id) {
+        try {
+            Optional<Employee> employee = repoEmployee.findById(id);
+            if (employee.isPresent()) {
+                return new ResponseEntity<>(employee.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un empleado mediante su employeeId
+     * 
+     * @UsageMethod localhost:8080/api/employees?employeeId={employeeId} with GET
+     * @param employeeId id del empleado del cuál desea obtener su información
+     * @return HTTP Response OK con el empleado en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin empleado, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/employees", params = "employeeId")
+    public ResponseEntity<Employee> getEmployeeByEmployeeId(@RequestParam(value = "employeeId") String employeeId) {
+        try {
+            Optional<Employee> employee = repoEmployee.findByEmployeeid(employeeId);
+            if (employee.isPresent()) {
+                return new ResponseEntity<>(employee.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un empleado mediante su firstName
+     * 
+     * @UsageMethod localhost:8080/api/employees?firstName={firstName} with GET
+     * @param firstName primer nombre del empleado del cuál desea obtener su
+     *                  información
+     * @return HTTP Response OK con el empleado en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin empleado, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/employees", params = "firstName")
+    public ResponseEntity<List<Employee>> getEmployeeByFirstName(@RequestParam(value = "firstName") String firstName) {
+        List<Employee> employee = repoEmployee.findByFirstName(firstName);
+        try {
+            if (!employee.isEmpty()) {
+                return new ResponseEntity<>(employee, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un empleado mediante su lastName
+     * 
+     * @UsageMethod localhost:8080/api/employees?lastName={lastName} with GET
+     * @param lastName Primer apellido del empleado del cuál desea obtener su
+     *                 información
+     * @return HTTP Response OK con el empleado en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin empleado, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/employees", params = "lastName")
+    public ResponseEntity<List<Employee>> getEmployeeByLastName(@RequestParam(value = "lastName") String lastName) {
+        List<Employee> employee = repoEmployee.findByLastName(lastName);
+        try {
+            if (!employee.isEmpty()) {
+                return new ResponseEntity<>(employee, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
