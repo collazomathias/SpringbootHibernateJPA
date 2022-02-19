@@ -2,6 +2,7 @@ package co.sofka.springboot.JPA.Hibernate.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,52 @@ public class RoleController {
             repoRoles.findAll().forEach(roles::add);
             if (!roles.isEmpty()) {
                 return new ResponseEntity<>(roles, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un role mediante su id
+     * 
+     * @UsageMethod localhost:8080/api/roles?id={id} with GET
+     * @param id id del role del cuál desea obtener su información
+     * @return HTTP Response OK con el role en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin role, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/roles", params = "id")
+    public ResponseEntity<Role> getRoleById(@RequestParam(value = "id") Long id) {
+        try {
+            Optional<Role> role = repoRoles.findById(id);
+            if (role.isPresent()) {
+                return new ResponseEntity<>(role.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un role mediante su name
+     * 
+     * @UsageMethod localhost:8080/api/roles?name={name} with GET
+     * @param name nombre del role del cuál desea obtener su información
+     * @return HTTP Response OK con el role en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin role, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/roles", params = "name")
+    public ResponseEntity<List<Role>> getRoleByName(@RequestParam("name") String name) {
+        List<Role> role = repoRoles.findByName(name);
+        try {
+            if (!role.isEmpty()) {
+                return new ResponseEntity<>(role, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
