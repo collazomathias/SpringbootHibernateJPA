@@ -108,4 +108,69 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Método para actualizar un proyecto mediante su id
+     * 
+     * @UsageMethod localhost:8080/api/projects/{id} with PUT
+     * @param id      id del proyecto del cuál desea actualizar su información
+     * @param project datos para modificar el proyecto, toma los datos del POST
+     *                requestBody
+     * @return HTTP Response OK en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin encontrar el proyecto, y EXPECTATION_FAILED en
+     *         caso de error.
+     * @author Mathías Collazo
+     **/
+    @PutMapping("/projects/{id}")
+    public ResponseEntity<Project> updateProjectById(@PathVariable("id") Long id,
+            @RequestBody Project project) {
+        Optional<Project> projectData = repoProjects.findById(id);
+        try {
+            if (projectData.isPresent()) {
+                Project _project = projectData.get();
+                if (project.getName() != null)
+                    _project.setName(project.getName());
+                return new ResponseEntity<>(repoProjects.save(_project), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar todos los proyectos.
+     * 
+     * @UsageMethod localhost:8080/api/projects with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/projects")
+    public ResponseEntity<HttpStatus> deleteAllProjects() {
+        try {
+            repoProjects.deleteAll();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar un proyecto por su id.
+     * 
+     * @UsageMethod localhost:8080/api/projects/{id} with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/projects/{id}")
+    public ResponseEntity<String> deleteProjectById(@PathVariable("id") Long id) {
+        try {
+            repoProjects.deleteById(id);
+            return new ResponseEntity<>("Project deleted succesfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
 }
