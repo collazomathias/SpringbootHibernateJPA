@@ -45,10 +45,6 @@ public class Employee {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -76,7 +72,7 @@ public class Employee {
     public Role getRole() {
         return this.role;
     }
-
+    
     public void setRole(Role role) {
         this.role = role;
     }
