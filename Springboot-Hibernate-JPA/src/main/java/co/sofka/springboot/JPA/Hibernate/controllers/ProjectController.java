@@ -2,6 +2,7 @@ package co.sofka.springboot.JPA.Hibernate.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,52 @@ public class ProjectController {
             repoProjects.findAll().forEach(projects::add);
             if (!projects.isEmpty()) {
                 return new ResponseEntity<>(projects, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un proyecto mediante su id
+     * 
+     * @UsageMethod localhost:8080/api/projects?id={id} with GET
+     * @param id id del proyecto del cuál desea obtener su información
+     * @return HTTP Response OK con el proyecto en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin proyecto, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/projects", params = "id")
+    public ResponseEntity<Project> getProjectById(@RequestParam(value = "id") Long id) {
+        try {
+            Optional<Project> project = repoProjects.findById(id);
+            if (project.isPresent()) {
+                return new ResponseEntity<>(project.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para obtener un proyecto mediante su name
+     * 
+     * @UsageMethod localhost:8080/api/projects?name={name} with GET
+     * @param name nombre del proyecto del cuál desea obtener su información
+     * @return HTTP Response OK con el proyecto en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin proyecto, EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @GetMapping(value = "/projects", params = "name")
+    public ResponseEntity<List<Project>> getProjectByName(@RequestParam(value = "name") String name) {
+        List<Project> project = repoProjects.findByName(name);
+        try {
+            if (!project.isEmpty()) {
+                return new ResponseEntity<>(project, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
