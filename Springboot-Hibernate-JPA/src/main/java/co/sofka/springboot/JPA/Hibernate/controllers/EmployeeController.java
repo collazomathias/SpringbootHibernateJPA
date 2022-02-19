@@ -155,5 +155,80 @@ public class EmployeeController {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    /**
+     * Método para actualizar un empleado mediante su employeeId
+     * 
+     * @UsageMethod localhost:8080/api/employees/{employeeId} with PUT
+     * @param employeeId employeeEd del empleado del cuál desea actualizar su
+     *                   información
+     * @param employee   datos para modificar el empleado, toma los datos del POST
+     *                   requestBody
+     * @return HTTP Response OK en caso de éxito, NO_CONTENT en
+     *         caso de éxito pero sin encontrar el empleado, y EXPECTATION_FAILED en
+     *         caso de error.
+     * @author Mathías Collazo
+     **/
+    @PutMapping("/employees/{employeeId}")
+    public ResponseEntity<Employee> updateEmployeeByEmployeeId(@PathVariable("employeeId") String employeeId,
+            @RequestBody Employee employee) {
+        Optional<Employee> employeeData = repoEmployee.findByEmployeeid(employeeId);
+        try {
+            if (employeeData.isPresent()) {
+                Employee _employee = employeeData.get();
+                if (employee.getFirstName() != null)
+                    _employee.setFirstName(employee.getFirstName());
+                if (employee.getLastName() != null)
+                    _employee.setLastName(employee.getLastName());
+                if (employee.getEmployeeid() != null)
+                    _employee.setEmployeeid(employee.getEmployeeid());
+                if (employee.getRole() != null)
+                    _employee.setRole(employee.getRole());
+                if (employee.getProjects() != null)
+                    _employee.setProjects(employee.getProjects());
+                return new ResponseEntity<>(repoEmployee.save(_employee), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar todos los empleados.
+     * 
+     * @UsageMethod localhost:8080/api/employees with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/employees")
+    public ResponseEntity<HttpStatus> deleteAllEmployees() {
+        try {
+            repoEmployee.deleteAll();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
+    /**
+     * Método para eliminar un empleado por su employeeId.
+     * 
+     * @UsageMethod localhost:8080/api/employees/{employeeId} with DELETE
+     * @return HTTP Response OK en caso de éxito, y EXPECTATION_FAILED en caso de
+     *         error.
+     * @author Mathías Collazo
+     **/
+    @DeleteMapping("/employees/{employeeId}")
+    public ResponseEntity<String> deleteEmployeeByEmployeeId(@PathVariable("employeeId") String employeeId) {
+        try {
+            Optional<Employee> employee = repoEmployee.findByEmployeeid(employeeId);
+            repoEmployee.deleteById(employee.get().getId());
+            return new ResponseEntity<>("Employee deleted succesfully!", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+    }
     
 }
